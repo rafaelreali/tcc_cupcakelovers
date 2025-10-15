@@ -43,9 +43,9 @@ export default function Checkout() {
       const { data: pedido, error: pedidoError } = await supabase
         .from('pedido')
         .insert({ 
-          cliente_id: user.id, 
-          valor_total: total,
-          status: 'aguardando pagamento'
+           cliente_id: user.id.toString(), 
+           valor_total: total,
+           status: 'pendente' 
         })
         .select('id_pedido') 
         .single();
