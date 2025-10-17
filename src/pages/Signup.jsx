@@ -13,7 +13,7 @@ export default function Signup() {
     setLoading(true)
     setMsg(null)
 
-
+   
     const { data, error } = await supabase.auth.signUp({ email, password: senha })
 
     if (error) {
@@ -22,8 +22,12 @@ export default function Signup() {
       return
     }
 
- 
+   
+    const newUserId = data.user.id; 
+
+    
     const { error: rpcError } = await supabase.rpc('create_user_profile', {
+        _user_id: newUserId,
         _nome: nome,
         _email: email
     })
