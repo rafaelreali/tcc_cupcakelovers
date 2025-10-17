@@ -13,6 +13,7 @@ export default function Signup() {
     setLoading(true)
     setMsg(null)
 
+
     const { data, error } = await supabase.auth.signUp({ email, password: senha })
 
     if (error) {
@@ -21,13 +22,14 @@ export default function Signup() {
       return
     }
 
-    const perfil = { nome, email }
-    const { error: insertError } = await supabase
-      .from('cliente')
-      .insert(perfil)
+ 
+    const { error: rpcError } = await supabase.rpc('create_user_profile', {
+        _nome: nome,
+        _email: email
+    })
 
-    if (insertError) {
-      setMsg({ type: 'error', text: 'Usuário criado no Auth, mas falha ao criar perfil: ' + insertError.message })
+    if (rpcError) {
+      setMsg({ type: 'error', text: 'Usuário criado no Auth, mas falha ao criar perfil: ' + rpcError.message })
     } else {
       setMsg({ type: 'success', text: 'Cadastro realizado! Verifique seu e-mail se a confirmação estiver ativada.' })
       setNome(''); setEmail(''); setSenha('')
@@ -42,7 +44,7 @@ export default function Signup() {
       <input placeholder="Nome" value={nome} onChange={e=>setNome(e.target.value)} required style={{display:'block',width:'100%',padding:8,margin:'8px 0', borderRadius:6, border:'1px solid #ccc'}} />
       <input placeholder="Email" type="email" value={email} onChange={e=>setEmail(e.target.value)} required style={{display:'block',width:'100%',padding:8,margin:'8px 0', borderRadius:6, border:'1px solid #ccc'}} />
       <input placeholder="Senha" type="password" value={senha} onChange={e=>setSenha(e.target.value)} required style={{display:'block',width:'100%',padding:8,margin:'8px 0', borderRadius:6, border:'1px solid #ccc'}} />
-      <button type="submit" disabled={loading} className="btn btn-auth-primary" style={{padding:'8px 12px'}}>
+      <button type="submit" disabled={loading} style={{background:'#8d6e63',color:'#fff',border:0,padding:'8px 12px',borderRadius:6}}>
         {loading ? 'Cadastrando...' : 'Criar conta'}
       </button>
     </form>
