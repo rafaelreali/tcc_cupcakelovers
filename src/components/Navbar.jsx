@@ -1,36 +1,49 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-export default function Navbar({ user, onLogout }) {
-  return (
-    <nav
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        background: "#f8bbd0",
-        padding: "10px 20px",
-        borderRadius: "0 0 10px 10px",
-      }}
-    >
-      <Link to="/" style={{ textDecoration: "none", color: "#3e2723", fontWeight: "bold", fontSize: "18px" }}>
-        🧁 Cupcake Lovers
-      </Link>
+export default function Navbar({ user, onLogout, isDarkMode, toggleDarkMode }) {
+    return (
+        <nav style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            padding: '10px 20px', 
+            alignItems: 'center', 
+            background: 'var(--color-card-bg)', 
+            borderBottom: '1px solid var(--color-bg-light)',
+            color: 'var(--color-text-dark)'
+        }}>
+            <div style={{ fontWeight: 'bold', fontSize: '1.2em' }}>
+      
+                <Link to="/">🧁 Cupcake Lovers</Link>
+            </div>
+            <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                
+               
+               <label className="dark-mode-toggle">
+                  <input 
+                      type="checkbox" 
+                      checked={isDarkMode} 
+                      onChange={toggleDarkMode} 
+                  />
+                  <span className="slider"></span>
+                </label>
+                
+            
+                <Link to="/">Vitrine</Link> 
 
-      <div style={{ display: "flex", gap: "15px" }}>
-        <Link to="/" style={{ textDecoration: "none", color: "#3e2723" }}>Vitrine</Link>
-        <Link to="/cart" style={{ textDecoration: "none", color: "#3e2723" }}>Carrinho</Link>
+                <Link to="/cart">🛒 Carrinho</Link>
 
-        {!user ? (
-          <>
-            <Link to="/login" style={{ textDecoration: "none", color: "#3e2723" }}>Login</Link>
-            <Link to="/signup" style={{ textDecoration: "none", color: "#3e2723" }}>Cadastro</Link>
-          </>
-        ) : (
-          <button onClick={onLogout} style={{ background: "transparent", border: "none", color: "#3e2723", cursor: "pointer" }}>
-            Sair
-          </button>
-        )}
-      </div>
-    </nav>
-  );
+                {user ? (
+                    <>
+                        <span style={{ fontSize: '0.9em' }}>Olá, {user.email}</span>
+                        <button onClick={onLogout} className="btn btn-auth-secondary">Sair</button>
+                    </>
+                ) : (
+                    <>
+                        <Link to="/login">Entrar</Link>
+                        <Link to="/signup">Cadastrar</Link>
+                    </>
+                )}
+            </div>
+        </nav>
+    );
 }

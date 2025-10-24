@@ -11,8 +11,10 @@ import Checkout from "./pages/Checkout";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
+    
     async function getSession() {
       const { data } = await supabase.auth.getSession();
       setUser(data.session?.user ?? null);
@@ -27,19 +29,26 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <Navbar user={user} onLogout={() => supabase.auth.signOut()} />
+    <div className={isDarkMode ? "dark-mode" : ""} style={{ minHeight: '100vh', background: 'var(--color-bg-light)' }}>
+      <Router>
+        <Navbar 
+          user={user} 
+          onLogout={() => supabase.auth.signOut()} 
+          isDarkMode={isDarkMode}
+          toggleDarkMode={() => setIsDarkMode(prev => !prev)}
+        />
 
-      <div className="app-container">
-        <Routes>
-          <Route path="/" element={<ProductList />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-        </Routes>
-      </div>
-    </Router>
+        <div className="app-container" style={{ padding: "20px" }}>
+          <Routes>
+            <Route path="/" element={<ProductList />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+          </Routes>
+        </div>
+      </Router>
+    </div>
   );
 }
 
